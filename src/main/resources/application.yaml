@@ -1,4 +1,11 @@
 spring:
+  ssl:
+    bundle:
+      jks:
+        web-server:
+          keystore:
+            location: "classpath:localhost.p12"
+            password: "${JKS_PASSWORD}"
   application:
       name: websocket
   security:
@@ -8,3 +15,7 @@ spring:
           issuer-uri: https://jackiergleason.auth0.com/
           audiences:
             - https://billing.secondave.net
+server:
+  port: 7443
+  ssl:
+    bundle: "web-server"
