@@ -42,3 +42,6 @@ out/
 .idea
 *.iml
 
+*.crt
+*.pem
+*.p12
