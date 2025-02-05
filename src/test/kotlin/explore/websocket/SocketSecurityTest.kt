@@ -95,6 +95,7 @@ class WebSocketControllerTest {
                     override fun handleFrame(headers: StompHeaders, payload: Any?) {
                         if (payload is ByteArray) {
                             val message = String(payload)
+                            println("Received message: $message")
                             receivedMessages.add(message)
                             latch.countDown()
                         } else {
@@ -103,6 +104,7 @@ class WebSocketControllerTest {
                     }
                 })
 
+                println("Sending status message")
                 session.send("/app/status", "Test status")
             }
         }
