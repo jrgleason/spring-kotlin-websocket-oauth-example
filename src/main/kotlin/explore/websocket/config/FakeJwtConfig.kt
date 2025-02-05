@@ -14,7 +14,7 @@ class FakeJwtConfig {
     @Bean
     fun jwtDecoder(): JwtDecoder {
         return JwtDecoder { token ->
-            if (token != "test-token") {
+            if (token != "test.token") {
                 throw JwtException("Invalid token")
             }
 

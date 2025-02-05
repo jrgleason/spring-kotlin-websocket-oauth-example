@@ -12,6 +12,7 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler
 import org.springframework.messaging.simp.stomp.StompHeaders
 import org.springframework.messaging.simp.stomp.StompSession
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.web.socket.WebSocketHttpHeaders
 import org.springframework.web.socket.client.WebSocketClient
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
@@ -23,11 +24,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("fake-jwt,secure")
 class WebSocketControllerTest {
-
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
     val client: WebSocketClient = StandardWebSocketClient()
 
     @LocalServerPort
@@ -64,7 +62,7 @@ class WebSocketControllerTest {
         }
 
         val headers = WebSocketHttpHeaders().apply {
-            add(HttpHeaders.AUTHORIZATION, "Bearer test-token")
+            add(HttpHeaders.AUTHORIZATION, "Bearer test.token")
         }
 
         stompClient.connectAsync(
@@ -76,7 +74,7 @@ class WebSocketControllerTest {
         latch.await(5, TimeUnit.SECONDS)
 
         assertFalse(receivedMessages.isEmpty())
-        assertEquals("Hello, Alice!", receivedMessages.first())
+        assertEquals("{\"value\":\"Hello, Alice!\"}", receivedMessages.first())
     }
 
     @Test
