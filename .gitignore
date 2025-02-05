@@ -38,3 +38,13 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+.idea
+*.iml
+
+*.crt
+*.pem
+*.p12
+application-local.yaml
+application-local.yml
+application-local.properties

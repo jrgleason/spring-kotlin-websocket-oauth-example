@@ -1,0 +1,12 @@
+server:
+  port: 7443
+  ssl:
+    bundle: "web-server"
+spring:
+  ssl:
+    bundle:
+      jks:
+        web-server:
+          keystore:
+            location: "classpath:localhost.p12"
+            password: "${JKS_PASSWORD}"

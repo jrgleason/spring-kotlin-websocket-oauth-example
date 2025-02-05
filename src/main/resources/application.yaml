@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: websocket
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.messaging: DEBUG
+    org.springframework.web.socket: DEBUG
+    org.springframework.security.oauth2: TRACE

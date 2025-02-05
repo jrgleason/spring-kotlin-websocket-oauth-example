@@ -18,35 +18,8 @@ fun main(args: Array<String>) {
 	runApplication<WebsocketApplication>(*args)
 }
 
-@Configuration
-@EnableWebSocketMessageBroker
-class WebSocketConfig : WebSocketMessageBrokerConfigurer {
-	override fun configureMessageBroker(registry: MessageBrokerRegistry) {
-		registry.enableSimpleBroker("/topic")
-		registry.setApplicationDestinationPrefixes("/app")
-	}
 
-	override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-		registry
-			.addEndpoint("/ws")
-			.setAllowedOriginPatterns("*")
-	}
-}
 
-@Controller
-class WebSocketController {
-	@MessageMapping("/hello")
-	@SendTo("/topic/greetings")
-	fun greeting(message: TestMessage): Greeting {
-		println(message)
-		return Greeting("Hello, " + message.name + "!")
-	}
-}
 
-data class TestMessage(
-	val name: String
-)
 
-data class Greeting(
-	val value: String
-)
+
