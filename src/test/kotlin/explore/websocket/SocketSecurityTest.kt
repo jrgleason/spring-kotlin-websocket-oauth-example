@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpHeaders
 import org.springframework.messaging.converter.MappingJackson2MessageConverter
+import org.springframework.messaging.converter.StringMessageConverter
 import org.springframework.messaging.simp.stomp.StompFrameHandler
 import org.springframework.messaging.simp.stomp.StompHeaders
 import org.springframework.messaging.simp.stomp.StompSession
@@ -80,7 +81,7 @@ class WebSocketControllerTest {
     @Test
     fun testStatusWithoutToken() {
         val stompClient = WebSocketStompClient(client)
-        stompClient.messageConverter = MappingJackson2MessageConverter()
+        stompClient.messageConverter = StringMessageConverter()
 
         val receivedMessages = mutableListOf<String>()
         val latch = CountDownLatch(1)
@@ -89,14 +90,12 @@ class WebSocketControllerTest {
             override fun afterConnected(session: StompSession, connectedHeaders: StompHeaders) {
                 session.subscribe("/topic/chat", object : StompFrameHandler {
                     override fun getPayloadType(headers: StompHeaders): Class<*> {
-                        return ByteArray::class.java
+                        return String::class.java
                     }
 
                     override fun handleFrame(headers: StompHeaders, payload: Any?) {
-                        if (payload is ByteArray) {
-                            val message = String(payload)
-                            println("Received message: $message")
-                            receivedMessages.add(message)
+                        if (payload is String) {
+                            receivedMessages.add(payload)
                             latch.countDown()
                         } else {
                             println("Unexpected payload: $payload")
@@ -104,7 +103,6 @@ class WebSocketControllerTest {
                     }
                 })
 
-                println("Sending status message")
                 session.send("/app/status", "Test status")
             }
         }
