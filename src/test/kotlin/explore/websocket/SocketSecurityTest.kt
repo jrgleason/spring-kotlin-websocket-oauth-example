@@ -80,7 +80,65 @@ class WebSocketControllerTest {
 
     @Test
     fun testStatusWithoutToken() {
-        val stompClient = WebSocketStompClient(client)
+        val stompClient = WebSocketStompClient(StandardWebSocketClient())
+        stompClient.messageConverter = StringMessageConverter()
+
+        val receivedMessages = mutableListOf<String>()
+        val latch = CountDownLatch(1)
+
+        // Authenticated client to listen to /topic/chat
+        val authSessionHandler = object : StompSessionHandlerAdapter() {
+            override fun afterConnected(session: StompSession, connectedHeaders: StompHeaders) {
+                session.subscribe("/topic/chat", object : StompFrameHandler {
+                    override fun getPayloadType(headers: StompHeaders): Class<*> {
+                        return String::class.java
+                    }
+
+                    override fun handleFrame(headers: StompHeaders, payload: Any?) {
+                        if (payload is String) {
+                            println("Received message: $payload")
+                            receivedMessages.add(payload)
+                            latch.countDown()
+                        } else {
+                            println("Unexpected payload: $payload")
+                        }
+                    }
+                })
+            }
+        }
+
+        val authHeaders = WebSocketHttpHeaders().apply {
+            add(HttpHeaders.AUTHORIZATION, "Bearer test.token")
+        }
+
+        stompClient.connectAsync(
+            "ws://localhost:$port/ws",
+            authHeaders,
+            authSessionHandler
+        )
+
+        // Unauthenticated client to send /app/status message
+        val unauthSessionHandler = object : StompSessionHandlerAdapter() {
+            override fun afterConnected(session: StompSession, connectedHeaders: StompHeaders) {
+                println("Sending status message")
+                session.send("/app/status", "Test status")
+            }
+        }
+
+        stompClient.connectAsync(
+            "ws://localhost:$port/ws",
+            unauthSessionHandler
+        )
+
+        latch.await(5, TimeUnit.SECONDS)
+
+        assertFalse(receivedMessages.isEmpty())
+        assertEquals("Status: Test status", receivedMessages.first())
+    }
+
+    @Test
+    fun testStatusWithoutTokenBoth() {
+        val stompClient = WebSocketStompClient(StandardWebSocketClient())
         stompClient.messageConverter = StringMessageConverter()
 
         val receivedMessages = mutableListOf<String>()
@@ -95,6 +153,7 @@ class WebSocketControllerTest {
 
                     override fun handleFrame(headers: StompHeaders, payload: Any?) {
                         if (payload is String) {
+                            println("Received message: $payload")
                             receivedMessages.add(payload)
                             latch.countDown()
                         } else {
@@ -103,6 +162,7 @@ class WebSocketControllerTest {
                     }
                 })
 
+                println("Sending status message")
                 session.send("/app/status", "Test status")
             }
         }
@@ -114,8 +174,7 @@ class WebSocketControllerTest {
 
         latch.await(5, TimeUnit.SECONDS)
 
-        assertFalse(receivedMessages.isEmpty())
-        assertEquals("Status: Test status", receivedMessages.first())
+        assertTrue(receivedMessages.isEmpty())
     }
 
     @Test
