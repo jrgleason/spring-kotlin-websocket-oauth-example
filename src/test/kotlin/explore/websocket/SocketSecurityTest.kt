@@ -24,7 +24,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("fake-jwt,secure")
+@ActiveProfiles("fake-jwt", "secure")
 class WebSocketControllerTest {
     val client: WebSocketClient = StandardWebSocketClient()
 
