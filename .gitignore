@@ -48,3 +48,6 @@ out/
 application-local.yaml
 application-local.yml
 application-local.properties
+
+node_modules
+
