@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class ListenerComponent {
     private val logger = LoggerFactory.getLogger(ListenerComponent::class.java)
 
-    @SubscribeMapping("/topic/greetings")
+    @SubscribeMapping("/topic/greeting")  // Changed to match the send destination
     fun handleGreeting(message: String) {
         logger.info("Subscriber received greeting message: $message")
     }
