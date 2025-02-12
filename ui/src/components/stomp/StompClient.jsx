@@ -89,6 +89,10 @@ const StompClient = ({
 
         const stompClient = new Client({
             brokerURL,
+            connectHeaders: {
+                // Add Authorization header with bearer token
+                Authorization: `Bearer test.token`
+            },
             onConnect: () => {
                 console.log("STOMP client connected");
                 setIsRetrying(false);
