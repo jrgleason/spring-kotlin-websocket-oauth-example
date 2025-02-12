@@ -20,6 +20,7 @@ class SecurityConfig {
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/protected/**").authenticated()
+                    .requestMatchers("/fe/**").authenticated()
                     .anyRequest().permitAll()
             }
 

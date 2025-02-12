@@ -10,10 +10,11 @@ const Spinner = () => (
 const MAX_ERRORS = 3;
 const RETRY_DELAY = 2000;
 
-const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
+const PrivateChat = () => {
     const [messages, setMessages] = useState([]);
     const [client, setClient] = useState(null);
-    const [statusMessage, setStatusMessage] = useState("");
+    const [message, setMessage] = useState("");
+    const [username, setUsername] = useState("");
     const [isConnected, setIsConnected] = useState(false);
     const [error, setError] = useState(null);
     const [hasFailed, setHasFailed] = useState(false);
@@ -29,11 +30,22 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
         setClient(null);
     };
 
+    const fetchUsername = async () => {
+        try {
+            const response = await fetch('/fe/user');
+            const data = await response.json();
+            setUsername(data.name);
+            return data.name;
+        } catch (err) {
+            handleError(`Failed to fetch user info: ${err.message}`);
+            return null;
+        }
+    };
+
     const handleError = (errorMsg) => {
         errorCount.current += 1;
         cleanup();
         setError(errorMsg);
-        onError?.(errorMsg);
         setIsConnected(false);
 
         if (errorCount.current >= MAX_ERRORS) {
@@ -54,8 +66,12 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
         initializeStompClient();
     };
 
-    const initializeStompClient = () => {
+    const initializeStompClient = async () => {
         if (hasFailed) return;
+
+        const user = await fetchUsername();
+        if (!user) return;
+
         cleanup();
         const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
         const brokerURL = `${wsProtocol}//${window.location.host}/ws`;
@@ -65,7 +81,7 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
             connectHeaders: { Authorization: `Bearer test.token` },
             onConnect: () => {
                 setIsRetrying(false);
-                subscribeToTopic(stompClient);
+                subscribeToPrivateMessages(stompClient);
                 setIsConnected(true);
             },
             onDisconnect: () => {
@@ -86,13 +102,14 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
         return cleanup;
     }, []);
 
-    const subscribeToTopic = (stompClient) => {
+    const subscribeToPrivateMessages = (stompClient) => {
         if (!stompClient?.active) return;
         try {
-            stompClient.subscribe(subscribeTopic, (message) => {
-                const messageText = message.body.replace(/^Status:\s*/, "");
-                setMessages((prev) => [...prev, messageText]);
-            }, { onError: (error) => handleError(`Subscription error: ${error.headers?.message || "Access denied"}`) });
+            stompClient.subscribe(`/user/${username}/chat/messages`, (message) => {
+                setMessages((prev) => [...prev, message.body]);
+            }, {
+                onError: (error) => handleError(`Subscription error: ${error.headers?.message || "Access denied"}`)
+            });
         } catch (err) {
             handleError(`Failed to subscribe: ${err.message}`);
         }
@@ -101,8 +118,11 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
     const sendMessage = () => {
         if (!client?.active || hasFailed) return;
         try {
-            client.publish({ destination: publishTopic, body: statusMessage });
-            setStatusMessage("");
+            client.publish({
+                destination: '/app/private-message',
+                body: message
+            });
+            setMessage("");
             setError(null);
         } catch (err) {
             handleError(`Failed to send message: ${err.message}`);
@@ -110,7 +130,7 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
     };
 
     const handleKeyPress = (e) => {
-        if (e.key === "Enter" && statusMessage.trim()) sendMessage();
+        if (e.key === "Enter" && message.trim()) sendMessage();
     };
 
     if (hasFailed) {
@@ -122,7 +142,7 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">{title} - Connection Failed</h3>
+                    <h3 className="text-xl font-semibold text-white mb-2">Private Chat - Connection Failed</h3>
                     <p className="text-gray-400 mb-4">Failed after {MAX_ERRORS} attempts</p>
                     <div className="bg-red-900/50 border-l-4 border-red-500 p-4 rounded text-left mb-4">
                         <p className="text-sm text-red-400">{error}</p>
@@ -142,8 +162,8 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
                     <div className="flex items-center space-x-3">
                         <Spinner />
                         <span className="text-lg">
-              {isRetrying ? `Retrying connection (Attempt ${errorCount.current + 1}/${MAX_ERRORS})...` : "Connecting to server..."}
-            </span>
+                            {isRetrying ? `Retrying connection (Attempt ${errorCount.current + 1}/${MAX_ERRORS})...` : "Connecting to server..."}
+                        </span>
                     </div>
                     {error && <p className="text-sm text-red-400 mt-2">{error}</p>}
                 </div>
@@ -154,7 +174,7 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
     return (
         <div className="bg-gray-800 rounded-lg shadow-xl h-full flex flex-col">
             <div className="flex justify-between items-center p-6 border-b border-gray-700">
-                <h2 className="text-xl font-semibold text-white">{title}</h2>
+                <h2 className="text-xl font-semibold text-white">Private Chat - {username}</h2>
                 <div className="flex items-center space-x-2 bg-gray-700 px-4 py-2 rounded-full">
                     <div className="w-3 h-3 rounded-full bg-green-500" />
                     <span className="text-sm text-gray-300">Connected</span>
@@ -196,15 +216,15 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
                 <div className="flex space-x-3">
                     <input
                         type="text"
-                        value={statusMessage}
-                        onChange={(e) => setStatusMessage(e.target.value)}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        placeholder="Enter message"
+                        placeholder="Enter private message"
                         className="flex-1 bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500"
                     />
                     <button
                         onClick={sendMessage}
-                        disabled={!statusMessage.trim()}
+                        disabled={!message.trim()}
                         className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:bg-blue-800/50 disabled:text-gray-400 transition-colors duration-200"
                     >
                         Send
@@ -215,4 +235,4 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
     );
 };
 
-export default StompClient;
+export default PrivateChat;

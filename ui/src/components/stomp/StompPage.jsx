@@ -1,4 +1,5 @@
 import StompClient from './StompClient'
+import PrivateChat from "./PrivateChat.jsx";
 
 const StompPage = () => {
     return (
@@ -25,6 +26,10 @@ const StompPage = () => {
                             publishTopic="/app/hello"
                             onError={(error) => console.error("Protected topic error:", error)}
                         />
+                    </div>
+
+                    <div className="flex-1">
+                        <PrivateChat />
                     </div>
                 </div>
             </div>
