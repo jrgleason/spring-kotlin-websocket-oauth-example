@@ -8,6 +8,8 @@ const WebSocketClient = () => {
     const [client, setClient] = useState(null);
     const [canRetryGreetings, setCanRetryGreetings] = useState(true);
 
+    const token = "test.token";
+
     const subscribeToGreetings = useCallback(() => {
         if (!client || !client.active) return;
 
@@ -34,6 +36,9 @@ const WebSocketClient = () => {
 
         const stompClient = new Client({
             brokerURL,
+            connectHeaders:{
+                Authorization: `Bearer ${token}`
+            },
             onConnect: () => {
                 setConnected(true);
                 setError('');

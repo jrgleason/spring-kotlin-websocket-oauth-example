@@ -18,10 +18,10 @@ import java.lang.reflect.Type
 import java.net.URI
 import java.util.concurrent.atomic.AtomicBoolean
 
-@Component
-@Profile("fake-jwt")
-@EnableScheduling
-class ProducerComponent(private val messagingTemplate: SimpMessagingTemplate) {
+//@Component
+//@Profile("fake-jwt")
+//@EnableScheduling
+//class ProducerComponent(private val messagingTemplate: SimpMessagingTemplate) {
 //    private val logger = LoggerFactory.getLogger(ProducerComponent::class.java)
 //    private val initialized = AtomicBoolean(false)
 
@@ -53,4 +53,4 @@ class ProducerComponent(private val messagingTemplate: SimpMessagingTemplate) {
 //            logger.info("Published test message: $message")
 //        }
 //    }
-}
+//}
