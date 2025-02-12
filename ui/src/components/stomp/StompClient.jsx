@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
 const Spinner = () => (
     <div className="flex justify-center items-center">
@@ -57,11 +58,12 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
     const initializeStompClient = () => {
         if (hasFailed) return;
         cleanup();
-        const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        const brokerURL = `${wsProtocol}//${window.location.host}/ws`;
+
+        // Create SockJS instance
+        const socket = new SockJS('/ws');
 
         const stompClient = new Client({
-            brokerURL,
+            webSocketFactory: () => socket,
             connectHeaders: { Authorization: `Bearer test.token` },
             onConnect: () => {
                 setIsRetrying(false);
@@ -142,8 +144,8 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
                     <div className="flex items-center space-x-3">
                         <Spinner />
                         <span className="text-lg">
-              {isRetrying ? `Retrying connection (Attempt ${errorCount.current + 1}/${MAX_ERRORS})...` : "Connecting to server..."}
-            </span>
+                            {isRetrying ? `Retrying connection (Attempt ${errorCount.current + 1}/${MAX_ERRORS})...` : "Connecting to server..."}
+                        </span>
                     </div>
                     {error && <p className="text-sm text-red-400 mt-2">{error}</p>}
                 </div>

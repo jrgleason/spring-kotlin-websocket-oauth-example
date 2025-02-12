@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
 const Spinner = () => (
     <div className="flex justify-center items-center">
@@ -73,11 +74,12 @@ const PrivateChat = () => {
         if (!user) return;
 
         cleanup();
-        const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        const brokerURL = `${wsProtocol}//${window.location.host}/ws`;
+
+        // Create SockJS instance
+        const socket = new SockJS('/ws');
 
         const stompClient = new Client({
-            brokerURL,
+            webSocketFactory: () => socket,
             connectHeaders: { Authorization: `Bearer test.token` },
             onConnect: () => {
                 setIsRetrying(false);
