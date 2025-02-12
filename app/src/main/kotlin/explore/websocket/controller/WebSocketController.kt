@@ -17,8 +17,9 @@ class WebSocketController {
         logger.info(message.toString())
         return Greeting("Hello, " + message.name + "!")
     }
+
     @MessageMapping("/status")
-    @SendTo("/topic/chat")
+    @SendTo("/topic/status")
     fun status(message: String): String {
         return "Status: $message"
     }

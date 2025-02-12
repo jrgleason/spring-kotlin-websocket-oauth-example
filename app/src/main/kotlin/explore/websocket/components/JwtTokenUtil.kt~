@@ -1,0 +1,23 @@
+package explore.websocket.components
+
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.oauth2.jwt.JwtDecoder
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
+import org.springframework.stereotype.Component
+
+@Component
+class JwtTokenUtil(
+    private val jwtDecoder: JwtDecoder // Injects the fake or real JwtDecoder
+) {
+
+    fun validateToken(token: String): Authentication? {
+        return try {
+            val jwt = jwtDecoder.decode(token) // ✅ Use the configured JwtDecoder (fake or real)
+            val authorities: List<GrantedAuthority> = emptyList() // ✅ Explicitly specify type
+            JwtAuthenticationToken(jwt, authorities)
+        } catch (e: Exception) {
+            null // Invalid token
+        }
+    }
+}

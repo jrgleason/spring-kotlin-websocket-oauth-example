@@ -22,8 +22,8 @@ class WebSocketSecurityConfig {
             // Remove these if all paths require auth
             .simpTypeMatchers(SimpMessageType.CONNECT).permitAll()
             .simpTypeMatchers(SimpMessageType.DISCONNECT).permitAll()
-            .simpDestMatchers("/app/status").permitAll()
-            .simpDestMatchers("/app/hello").authenticated()
+            .simpDestMatchers("/app/status", "/topic/status").permitAll()
+            .simpDestMatchers("/app/hello", "/topic/greetings").authenticated()
             .anyMessage().authenticated()
         return messages.build()
     }
