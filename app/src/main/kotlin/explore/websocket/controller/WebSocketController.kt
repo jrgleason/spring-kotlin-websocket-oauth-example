@@ -26,8 +26,8 @@ class WebSocketController {
 
     @MessageMapping("/status")
     @SendTo("/topic/status")
-    fun status(message: String): String {
-        return "Status: $message"
+    fun status(message: TestMessage): String {
+        return "Status: ${message.message}"
     }
 
     @MessageMapping("/private-message")

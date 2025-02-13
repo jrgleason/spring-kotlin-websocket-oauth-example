@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef } from "react";
-import { Client } from "@stomp/stompjs";
+import {useEffect, useRef, useState} from "react";
+import {Client} from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
 const Spinner = () => (
     <div className="flex justify-center items-center">
@@ -10,7 +11,7 @@ const Spinner = () => (
 const MAX_ERRORS = 3;
 const RETRY_DELAY = 2000;
 
-const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
+const StompClient = ({title, subscribeTopic, publishTopic, onError}) => {
     const [messages, setMessages] = useState([]);
     const [client, setClient] = useState(null);
     const [statusMessage, setStatusMessage] = useState("");
@@ -57,12 +58,13 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
     const initializeStompClient = () => {
         if (hasFailed) return;
         cleanup();
-        const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        const brokerURL = `${wsProtocol}//${window.location.host}/ws`;
+
+        // Create SockJS instance
+        const socket = new SockJS('/ws');
 
         const stompClient = new Client({
-            brokerURL,
-            connectHeaders: { Authorization: `Bearer test.token` },
+            webSocketFactory: () => socket,
+            connectHeaders: {Authorization: `Bearer test.token`},
             onConnect: () => {
                 setIsRetrying(false);
                 subscribeToTopic(stompClient);
@@ -89,10 +91,15 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
     const subscribeToTopic = (stompClient) => {
         if (!stompClient?.active) return;
         try {
-            stompClient.subscribe(subscribeTopic, (message) => {
-                const messageText = message.body.replace(/^Status:\s*/, "");
-                setMessages((prev) => [...prev, messageText]);
-            }, { onError: (error) => handleError(`Subscription error: ${error.headers?.message || "Access denied"}`) });
+            stompClient.subscribe(
+                subscribeTopic,
+                (message) => {
+                    const messageText = message.body.replace(/^Status:\s*/, "");
+                    setMessages((prev) => [...prev, messageText]);
+                },
+                {
+                    "Authorization": `Bearer test.token`
+                });
         } catch (err) {
             handleError(`Failed to subscribe: ${err.message}`);
         }
@@ -101,7 +108,18 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
     const sendMessage = () => {
         if (!client?.active || hasFailed) return;
         try {
-            client.publish({ destination: publishTopic, body: statusMessage });
+            client.publish(
+                {
+                    destination: publishTopic,
+                    body: JSON.stringify({
+                        message: statusMessage,
+                        name: "Test Message"
+                    }),
+                    headers: {
+                        "Authorization": `Bearer test.token`
+                    }
+                }
+            );
             setStatusMessage("");
             setError(null);
         } catch (err) {
@@ -119,7 +137,8 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
                 <div className="text-center">
                     <div className="text-red-400 mb-4">
                         <svg className="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                         </svg>
                     </div>
                     <h3 className="text-xl font-semibold text-white mb-2">{title} - Connection Failed</h3>
@@ -127,7 +146,8 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
                     <div className="bg-red-900/50 border-l-4 border-red-500 p-4 rounded text-left mb-4">
                         <p className="text-sm text-red-400">{error}</p>
                     </div>
-                    <button onClick={handleRetry} className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                    <button onClick={handleRetry}
+                            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
                         Try Again
                     </button>
                 </div>
@@ -140,10 +160,10 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
             <div className="flex justify-center items-center min-h-[200px] bg-gray-800 rounded-lg">
                 <div className="flex flex-col items-center space-y-3 text-gray-200">
                     <div className="flex items-center space-x-3">
-                        <Spinner />
+                        <Spinner/>
                         <span className="text-lg">
-              {isRetrying ? `Retrying connection (Attempt ${errorCount.current + 1}/${MAX_ERRORS})...` : "Connecting to server..."}
-            </span>
+                            {isRetrying ? `Retrying connection (Attempt ${errorCount.current + 1}/${MAX_ERRORS})...` : "Connecting to server..."}
+                        </span>
                     </div>
                     {error && <p className="text-sm text-red-400 mt-2">{error}</p>}
                 </div>
@@ -156,7 +176,7 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
             <div className="flex justify-between items-center p-6 border-b border-gray-700">
                 <h2 className="text-xl font-semibold text-white">{title}</h2>
                 <div className="flex items-center space-x-2 bg-gray-700 px-4 py-2 rounded-full">
-                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                    <div className="w-3 h-3 rounded-full bg-green-500"/>
                     <span className="text-sm text-gray-300">Connected</span>
                 </div>
             </div>
@@ -167,7 +187,9 @@ const StompClient = ({ title, subscribeTopic, publishTopic, onError }) => {
                         <div className="flex">
                             <div className="flex-shrink-0">
                                 <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                    <path fillRule="evenodd"
+                                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                          clipRule="evenodd"/>
                                 </svg>
                             </div>
                             <div className="ml-3">

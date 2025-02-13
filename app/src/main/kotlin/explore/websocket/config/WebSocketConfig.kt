@@ -19,6 +19,6 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
         registry
             .addEndpoint("/ws")
             .setAllowedOriginPatterns("*")
-
+            .withSockJS()
     }
 }
