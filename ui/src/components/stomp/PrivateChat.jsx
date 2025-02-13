@@ -107,11 +107,18 @@ const PrivateChat = () => {
     const subscribeToPrivateMessages = (stompClient) => {
         if (!stompClient?.active) return;
         try {
-            stompClient.subscribe(`/user/${username}/chat/messages`, (message) => {
-                setMessages((prev) => [...prev, message.body]);
-            }, {
-                onError: (error) => handleError(`Subscription error: ${error.headers?.message || "Access denied"}`)
-            });
+            stompClient.subscribe(
+                `/user/${username}/chat/messages`,
+                (message) => {
+                    setMessages(
+                        (prev) =>
+                            [...prev, message.body]
+                    )
+                },
+                {
+                    "Authorization": `Bearer test.token`
+                }
+            );
         } catch (err) {
             handleError(`Failed to subscribe: ${err.message}`);
         }
