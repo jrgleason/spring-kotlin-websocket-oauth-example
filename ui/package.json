@@ -13,7 +13,8 @@
   "dependencies": {
     "@stomp/stompjs": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "sockjs-client": "latest"
   },
   "devDependencies": {
     "@eslint/js": "latest",

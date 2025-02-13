@@ -1,23 +1,5 @@
 package explore.websocket.components
 
-import explore.websocket.model.TestMessage
-import org.slf4j.LoggerFactory
-import org.springframework.context.annotation.Profile
-import org.springframework.context.event.ContextRefreshedEvent
-import org.springframework.context.event.EventListener
-import org.springframework.messaging.simp.SimpMessagingTemplate
-import org.springframework.messaging.simp.stomp.StompHeaders
-import org.springframework.messaging.simp.stomp.StompSession
-import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
-import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.stereotype.Component
-import org.springframework.web.socket.client.standard.StandardWebSocketClient
-import org.springframework.web.socket.messaging.WebSocketStompClient
-import java.lang.reflect.Type
-import java.net.URI
-import java.util.concurrent.atomic.AtomicBoolean
-
 //@Component
 //@Profile("fake-jwt")
 //@EnableScheduling

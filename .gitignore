@@ -70,3 +70,5 @@ application-local.properties
 # Static assets
 static
 app/src/main/resources/static
+
+ui/src/assets/**

@@ -4,8 +4,11 @@ import explore.websocket.model.Greeting
 import explore.websocket.model.TestMessage
 import org.slf4j.LoggerFactory
 import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.handler.annotation.SendTo
+import org.springframework.messaging.simp.annotation.SendToUser
 import org.springframework.stereotype.Controller
+import java.security.Principal
 
 @Controller
 class WebSocketController {
@@ -20,7 +23,16 @@ class WebSocketController {
 
     @MessageMapping("/status")
     @SendTo("/topic/status")
-    fun status(message: String): String {
-        return "Status: $message"
+    fun status(message: TestMessage): String {
+        return "Status: ${message.message}"
+    }
+
+    @MessageMapping("/private-message")
+    @SendToUser("/chat/messages")
+    fun addUser(
+        @Payload chatMessage: String,
+        principal: Principal
+    ): String {
+        return "Hello, ${principal.name}! You sent: $chatMessage"
     }
 }
