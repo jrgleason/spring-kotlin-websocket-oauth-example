@@ -1,5 +1,7 @@
 # Spring Kotlin WebSocket OAuth Example
 
+![Project Screenshot](docs/assets/ss-ui.png)
+
 This project demonstrates how to implement secure WebSocket communication using Spring Boot, Kotlin, and OAuth/JWT authentication. It includes both a working example with fake JWT tokens for development and a proper secure configuration for production use.
 
 ## Building and Running
