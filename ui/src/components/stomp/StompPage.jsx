@@ -29,7 +29,7 @@ const StompPage = () => {
                     </div>
 
                     <div className="flex-1">
-                        <PrivateChat />
+                        <PrivateChat/>
                     </div>
                 </div>
             </div>

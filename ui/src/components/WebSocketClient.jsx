@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Client } from '@stomp/stompjs';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Client} from '@stomp/stompjs';
 
 const WebSocketClient = () => {
     const [messages, setMessages] = useState([]);
@@ -36,7 +36,7 @@ const WebSocketClient = () => {
 
         const stompClient = new Client({
             brokerURL,
-            connectHeaders:{
+            connectHeaders: {
                 Authorization: `Bearer ${token}`
             },
             onConnect: () => {

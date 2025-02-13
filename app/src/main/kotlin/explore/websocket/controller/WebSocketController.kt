@@ -3,15 +3,12 @@ package explore.websocket.controller
 import explore.websocket.model.Greeting
 import explore.websocket.model.TestMessage
 import org.slf4j.LoggerFactory
-import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.messaging.simp.annotation.SendToUser
 import org.springframework.stereotype.Controller
 import java.security.Principal
-import java.text.SimpleDateFormat
-import java.util.Date
 
 @Controller
 class WebSocketController {

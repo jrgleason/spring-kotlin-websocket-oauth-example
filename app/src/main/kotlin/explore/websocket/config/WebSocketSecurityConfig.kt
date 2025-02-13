@@ -6,7 +6,12 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.messaging.Message
+import org.springframework.messaging.MessageChannel
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.messaging.simp.SimpMessageType
+import org.springframework.messaging.simp.config.ChannelRegistration
+import org.springframework.messaging.support.ChannelInterceptor
+import org.springframework.messaging.support.MessageHeaderAccessor
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.authorization.AuthorizationDecision
 import org.springframework.security.authorization.AuthorizationManager
@@ -22,7 +27,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 @Profile("secure")
 @Configuration
 @EnableWebSocketSecurity
-class WebSocketSecurityConfig(private val jwtDecoder: JwtDecoder) {
+class WebSocketSecurityConfig(jwtDecoder: JwtDecoder) {
     private val logger: Logger = LoggerFactory.getLogger(WebSocketSecurityConfig::class.java)
     private val authenticationProvider = JwtAuthenticationProvider(jwtDecoder)
 
@@ -36,7 +41,7 @@ class WebSocketSecurityConfig(private val jwtDecoder: JwtDecoder) {
 
         messages
             .simpTypeMatchers(SimpMessageType.CONNECT, SimpMessageType.DISCONNECT).permitAll()
-            .simpDestMatchers("/app/status", "/topic/status", "/app/hello", "/topic/greetings").permitAll()
+            .simpDestMatchers("/app/status", "/topic/status").permitAll()
             .anyMessage().access(tokenAuthorizationManager)
         return messages.build()
     }
