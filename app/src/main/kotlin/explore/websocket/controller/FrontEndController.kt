@@ -1,6 +1,7 @@
 package explore.websocket.controller
 
 import org.springframework.core.env.Environment
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,7 +14,7 @@ class FrontEndController(
     private val environment: Environment
 ) {
 
-    @GetMapping("/user")
+    @GetMapping("/user", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
     fun user(principal: Principal): Map<String, String> {
         return mapOf(
@@ -21,7 +22,7 @@ class FrontEndController(
         )
     }
 
-    @GetMapping("/global")
+    @GetMapping("/global", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
     fun general(): Map<String, String> {
         return mapOf(
