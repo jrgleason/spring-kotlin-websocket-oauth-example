@@ -11,13 +11,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@auth0/auth0-spa-js": "^2.1.3",
     "@stomp/stompjs": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "sockjs-client": "latest"
+    "sockjs-client": "latest",
+    "xstate": "^5.19.2"
   },
   "devDependencies": {
     "@eslint/js": "latest",
+    "@xstate/react": "latest",
     "@tailwindcss/vite": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",

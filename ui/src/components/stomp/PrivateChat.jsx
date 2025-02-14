@@ -1,35 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import StompClient from './StompClient';
+import { useAuth } from '../auth/AuthenticationProvider.jsx';
 
 const PrivateChat = () => {
-    const [username, setUsername] = useState('');
+    const { user, token } = useAuth();
 
-    useEffect(() => {
-        const fetchUsername = async () => {
-            try {
-                const response = await fetch('/fe/user', {
-                    headers: {
-                        'Authorization': 'Bearer test.token'
-                    }
-                });
-                const data = await response.json();
-                setUsername(data.name);
-            } catch (err) {
-                console.error('Failed to fetch username:', err);
-            }
-        };
-        fetchUsername().catch((err) => console.error('Failed to fetch username:', err));
-    }, []);
-
-    if (!username) {
+    if (!user) {
         return <div>Loading...</div>;
     }
 
     return (
         <StompClient
-            title={`Private Chat - ${username}`}
-            subscribeTopic={`/user/${username}/queue/messages`}
+            title={`Private Chat - ${user.name}`}
+            subscribeTopic={`/user/${user.name}/queue/messages`}
             publishTopic="/app/private-message"
+            token={token}
             onError={(error) => console.error('Private chat error:', error)}
         />
     );
