@@ -28,11 +28,12 @@ class WebSocketController {
     }
 
     @MessageMapping("/private-message")
-    @SendToUser("/chat/messages")
+    @SendToUser("/queue/messages")
     fun addUser(
         @Payload chatMessage: String,
         principal: Principal
     ): String {
+        logger.info("Received message: $chatMessage from user: ${principal.name}")
         return "Hello, ${principal.name}! You sent: $chatMessage"
     }
 }

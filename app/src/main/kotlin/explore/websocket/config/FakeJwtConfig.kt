@@ -20,7 +20,7 @@ class FakeJwtConfig {
 
             Jwt.withTokenValue(token)
                 .header("alg", "none")
-                .claim("sub", "user")
+                .claim("sub", "fakeUser")
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plusSeconds(3600))
                 .build()
