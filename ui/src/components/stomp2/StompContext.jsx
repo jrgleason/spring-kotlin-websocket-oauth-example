@@ -3,12 +3,9 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from "react"
 import {Client} from "@stomp/stompjs"
 
-const StompContext = createContext({
-    client: null,
-    subscribe: () => null,
-});
+const StompContext = createContext(null)
 
-const StompProvider = ({children}) => {
+const StompProvider = ({children, token}) => {
     const stompClientRef = useRef(null)
     const subscriptionsRef = useRef(new Map())
     const [isClientReady, setIsClientReady] = useState(false)
@@ -16,7 +13,7 @@ const StompProvider = ({children}) => {
     useEffect(() => {
         const client = new Client({
             brokerURL: "ws://localhost:8080/ws",
-            connectHeaders: {Authorization: `Bearer test.token`},
+            connectHeaders: {Authorization: `Bearer ${token}`},
             onConnect: () => {
                 console.log("STOMP client connected")
                 setIsClientReady(true) // Set client as ready once connected

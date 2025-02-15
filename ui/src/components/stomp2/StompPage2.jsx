@@ -9,7 +9,7 @@ const StompPage = () => {
 
                 <div className="flex gap-8">
                     <div className="flex-1">
-                        <StompContext>
+                        <StompContext token="test.token">
                             <PrivateChat2/>
                         </StompContext>
                     </div>
