@@ -12,6 +12,19 @@ const __dirname = path.dirname(__filename)
 
 // https://vite.dev/config/
 export default defineConfig({
+    define: {
+        global: {}, // Provide an empty object to polyfill `global` in the browser
+    },
+    server: {
+        port: 5173,
+        proxy: {
+            "/fe": {
+                target: "http://localhost:8080",
+                changeOrigin: true,
+                secure: false
+            }
+        }
+    },
     plugins: [
       react(),
       tailwindcss(),

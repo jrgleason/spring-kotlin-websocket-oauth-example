@@ -1,11 +1,11 @@
 import './App.css'
-import StompPage from "./components/stomp/StompPage.jsx";
+import StompPage2 from "./components/stomp2/StompPage2.jsx"
 
 function App() {
     return (
         <>
             {/*<WebSocketClient />*/}
-            <StompPage/>
+            <StompPage2/>
         </>
     )
 }
