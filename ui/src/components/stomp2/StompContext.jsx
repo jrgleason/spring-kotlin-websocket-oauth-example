@@ -1,11 +1,11 @@
 'use client'
 
 import React, {createContext, useContext, useEffect, useRef, useState} from "react"
-import {Client, Versions} from "@stomp/stompjs"
+import {Client} from "@stomp/stompjs"
 
 const StompContext = createContext({
     client: null,
-    subscribe: (destination, callback) => null,
+    subscribe: () => null,
 });
 
 const StompProvider = ({children}) => {
@@ -31,7 +31,7 @@ const StompProvider = ({children}) => {
         client.activate()
 
         return () => {
-            client.deactivate()
+            client.deactivate().then(() => console.log("STOMP client deactivated"))
             subscriptionsRef.current.forEach((sub) => sub.unsubscribe())
             subscriptionsRef.current.clear()
         }
@@ -68,7 +68,7 @@ const StompProvider = ({children}) => {
     }
 
     return (
-        <StompContext.Provider value={{client: stompClientRef.current, subscribe, sendMessage}}>
+        <StompContext.Provider value={{client: stompClientRef.current, subscribe, sendMessage, isClientReady}}>
             {children}
         </StompContext.Provider>
     )
