@@ -1,5 +1,3 @@
-'use client'
-
 import { useEffect, useRef, useState } from 'react'
 import { Client } from '@stomp/stompjs'
 
@@ -33,7 +31,7 @@ export const useStompClient = (token) => {
     }, [token])
 
     const subscribe = (destination, callback) => {
-        if (!isClientReady || !stompClientRef.current) {
+        if (!isClientReady) {
             console.info('STOMP client is not ready yet.')
             return null
         }
@@ -50,7 +48,7 @@ export const useStompClient = (token) => {
     }
 
     const sendMessage = (destination, message) => {
-        if (!isClientReady || !stompClientRef.current) {
+        if (!isClientReady) {
             console.info('STOMP client is not ready yet.')
             return
         }

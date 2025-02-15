@@ -48,7 +48,6 @@ class WebSocketConfig(
                 )
 
                 if (StompCommand.CONNECT == accessor!!.command) {
-                    // Extract Authorization header
                     val authHeader = accessor.getFirstNativeHeader("Authorization")
 
                     if (authHeader != null && authHeader.startsWith("Bearer ")) {

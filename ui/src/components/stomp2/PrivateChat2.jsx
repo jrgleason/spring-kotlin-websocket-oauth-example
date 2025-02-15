@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react'
 import {useStompClient} from "./StompContext.jsx"
 
 const PrivateChat2 = ({username, token}) => {
@@ -8,19 +8,15 @@ const PrivateChat2 = ({username, token}) => {
     const [messages, setMessages] = useState([])
 
     useEffect(() => {
-        if (!isClientReady) return;
-        console.log("Trying to subscribe");
+        if (!isClientReady) return
+        console.log("Trying to subscribe")
 
-        const subscription = subscribe(`/user/queue/messages`, message => {
+        subscribe(`/user/queue/messages`, message => {
             console.log("Received message", message)
             setMessages((prev) => [...prev, message.body])
         })
 
         setIsReady(true)
-
-        return () => {
-            subscription?.unsubscribe()
-        }
     }, [isClientReady])
 
     const sendTestMessage = () => {
@@ -34,6 +30,6 @@ const PrivateChat2 = ({username, token}) => {
             {messages.map((message, idx) => <div key={idx}>{message}</div>)}
         </div>
     )
-};
+}
 
-export default PrivateChat2;
+export default PrivateChat2
