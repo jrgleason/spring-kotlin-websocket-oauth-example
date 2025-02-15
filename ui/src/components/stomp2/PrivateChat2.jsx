@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useStomp} from "./StompContext.jsx"
 
-const PrivateChat2 = () => {
+const PrivateChat2 = ({username}) => {
     const {subscribe, sendMessage, isClientReady} = useStomp()
 
     const [isReady, setIsReady] = useState(false)
@@ -29,7 +29,7 @@ const PrivateChat2 = () => {
 
     return (
         <div>
-            {isReady && <button onClick={sendTestMessage}>Send</button>}
+            {isReady && <button onClick={sendTestMessage}>Send message to {username}</button>}
 
             {messages.map((message, idx) => <div key={idx}>{message}</div>)}
         </div>

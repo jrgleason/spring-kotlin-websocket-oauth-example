@@ -10,7 +10,12 @@ const StompPage = () => {
                 <div className="flex gap-8">
                     <div className="flex-1">
                         <StompContext token="test.token">
-                            <PrivateChat2/>
+                            <PrivateChat2 username="user1" />
+                        </StompContext>
+                    </div>
+                    <div className="flex-1">
+                        <StompContext token="test.token2">
+                            <PrivateChat2 username="user2" />
                         </StompContext>
                     </div>
                 </div>

@@ -14,13 +14,15 @@ class FakeJwtConfig {
     @Bean
     fun jwtDecoder(): JwtDecoder {
         return JwtDecoder { token ->
-            if (token != "test.token") {
-                throw JwtException("Invalid token")
+            val username = when (token) {
+                "test.token" -> "user1"
+                "test.token2" -> "user2"
+                else -> throw JwtException("Invalid token")
             }
 
             Jwt.withTokenValue(token)
                 .header("alg", "none")
-                .claim("sub", "fakeUser")
+                .claim("sub", username)
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plusSeconds(3600))
                 .build()
