@@ -1,26 +1,24 @@
 'use client'
 
-import React, {createContext, useContext, useEffect, useRef, useState} from "react"
-import {Client} from "@stomp/stompjs"
+import { useEffect, useRef, useState } from 'react'
+import { Client } from '@stomp/stompjs'
 
-const StompContext = createContext(null)
-
-const StompProvider = ({children, token}) => {
+export const useStompClient = (token) => {
     const stompClientRef = useRef(null)
     const subscriptionsRef = useRef(new Map())
     const [isClientReady, setIsClientReady] = useState(false)
 
     useEffect(() => {
         const client = new Client({
-            brokerURL: "ws://localhost:8080/ws",
-            connectHeaders: {Authorization: `Bearer ${token}`},
+            brokerURL: 'ws://localhost:8080/ws',
+            connectHeaders: { Authorization: `Bearer ${token}` },
             onConnect: () => {
-                console.log("STOMP client connected")
-                setIsClientReady(true) // Set client as ready once connected
+                console.log('STOMP client connected')
+                setIsClientReady(true)
             },
             onDisconnect: () => {
-                console.log("STOMP client disconnected")
-                setIsClientReady(false) // Set client as not ready when disconnected
+                console.log('STOMP client disconnected')
+                setIsClientReady(false)
             },
         })
 
@@ -28,15 +26,15 @@ const StompProvider = ({children, token}) => {
         client.activate()
 
         return () => {
-            client.deactivate().then(() => console.log("STOMP client deactivated"))
+            client.deactivate().then(() => console.log('STOMP client deactivated'))
             subscriptionsRef.current.forEach((sub) => sub.unsubscribe())
             subscriptionsRef.current.clear()
         }
-    }, [])
+    }, [token])
 
     const subscribe = (destination, callback) => {
         if (!isClientReady || !stompClientRef.current) {
-            console.info("STOMP client is not ready yet.")
+            console.info('STOMP client is not ready yet.')
             return null
         }
 
@@ -53,7 +51,7 @@ const StompProvider = ({children, token}) => {
 
     const sendMessage = (destination, message) => {
         if (!isClientReady || !stompClientRef.current) {
-            console.info("STOMP client is not ready yet.")
+            console.info('STOMP client is not ready yet.')
             return
         }
 
@@ -64,12 +62,5 @@ const StompProvider = ({children, token}) => {
         console.log(`Sent message to ${destination}: ${message}`)
     }
 
-    return (
-        <StompContext.Provider value={{client: stompClientRef.current, subscribe, sendMessage, isClientReady}}>
-            {children}
-        </StompContext.Provider>
-    )
+    return { client: stompClientRef.current, subscribe, sendMessage, isClientReady }
 }
-
-export default StompProvider
-export const useStomp = () => useContext(StompContext)

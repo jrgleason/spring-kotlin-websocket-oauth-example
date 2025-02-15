@@ -1,4 +1,3 @@
-import StompContext from "./StompContext.jsx"
 import PrivateChat2 from "./PrivateChat2.jsx"
 
 const StompPage = () => {
@@ -9,14 +8,10 @@ const StompPage = () => {
 
                 <div className="flex gap-8">
                     <div className="flex-1">
-                        <StompContext token="test.token">
-                            <PrivateChat2 username="user1" />
-                        </StompContext>
+                        <PrivateChat2 username="user1" token="test.token"/>
                     </div>
                     <div className="flex-1">
-                        <StompContext token="test.token2">
-                            <PrivateChat2 username="user2" />
-                        </StompContext>
+                        <PrivateChat2 username="user2" token="test.token2"/>
                     </div>
                 </div>
             </div>

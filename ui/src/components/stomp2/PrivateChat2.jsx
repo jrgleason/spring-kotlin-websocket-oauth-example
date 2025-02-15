@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {useStomp} from "./StompContext.jsx"
+import {useStompClient} from "./StompContext.jsx"
 
-const PrivateChat2 = ({username}) => {
-    const {subscribe, sendMessage, isClientReady} = useStomp()
+const PrivateChat2 = ({username, token}) => {
+    const {subscribe, sendMessage, isClientReady} = useStompClient(token)
 
     const [isReady, setIsReady] = useState(false)
     const [messages, setMessages] = useState([])
