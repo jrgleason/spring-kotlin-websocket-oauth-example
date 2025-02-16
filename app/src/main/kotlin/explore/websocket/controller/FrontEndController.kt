@@ -1,5 +1,7 @@
 package explore.websocket.controller
 
+import explore.websocket.config.providers.AuthPropertiesProvider
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
@@ -11,9 +13,8 @@ import java.security.Principal
 @Controller
 @RequestMapping("/fe")
 class FrontEndController(
-    private val environment: Environment
+    private val provider: AuthPropertiesProvider
 ) {
-
     @GetMapping("/user", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
     fun user(principal: Principal): Map<String, String> {
@@ -24,9 +25,5 @@ class FrontEndController(
 
     @GetMapping("/global", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
-    fun general(): Map<String, String> {
-        return mapOf(
-            "fakeLogin" to (environment.activeProfiles.contains("fake-jwt")).toString()
-        )
-    }
+    fun general(): Map<String, String> = provider.getAuthProperties()
 }

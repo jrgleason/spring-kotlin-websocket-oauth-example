@@ -1,9 +1,9 @@
 import React from 'react';
 import StompClient from './StompClient';
-import { useAuth } from '../auth/AuthenticationProvider.jsx';
+import {useAuthentication} from "../auth/AuthContext.js";
 
 const PrivateChat = () => {
-    const { user, token } = useAuth();
+    const { user, token } = useAuthentication();
 
     if (!user) {
         return <div>Loading...</div>;

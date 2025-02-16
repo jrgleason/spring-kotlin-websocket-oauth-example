@@ -1,9 +1,9 @@
 import StompClient from './StompClient.jsx';
 import PrivateChat from "./PrivateChat.jsx";
-import { useAuth } from '../auth/AuthenticationProvider.jsx';
+import {useAuthentication} from "../auth/AuthContext.js";
 
 const StompPage = () => {
-    const { token, send } = useAuth();
+    const { token, send } = useAuthentication();
 
     return (
         <div className="min-h-screen bg-gray-900 text-gray-200 p-8">
