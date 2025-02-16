@@ -1,6 +1,7 @@
 package explore.websocket.config
 
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpHeaders
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.simp.config.ChannelRegistration
@@ -41,25 +42,21 @@ class WebSocketConfig(
     // https://docs.spring.io/spring-framework/reference/web/websocket/stomp/authentication-token-based.html
     override fun configureClientInboundChannel(registration: ChannelRegistration) {
         registration.interceptors(object : ChannelInterceptor {
-            override fun preSend(
-                message: Message<*>,
-                channel: MessageChannel
-            ): Message<*> {
+            override fun preSend(message: Message<*>, channel: MessageChannel): Message<*> {
                 val accessor = MessageHeaderAccessor.getAccessor(
                     message,
                     StompHeaderAccessor::class.java
                 )
 
-                if (StompCommand.CONNECT == accessor?.command) {
-                    val authHeader = accessor.getFirstNativeHeader("Authorization")
-
-                    authHeader
+                if (accessor?.command == StompCommand.CONNECT) {
+                    accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION)
                         ?.takeIf { it.startsWith("Bearer ") }
-                        ?.let { header ->
-                            val token = header.substring(7)
+                        ?.substring(7)
+                        ?.let { token ->
                             accessor.user = authenticationProvider.authenticate(BearerTokenAuthenticationToken(token))
                         } ?: println("Authorization header missing or invalid")
                 }
+
                 return message
             }
         })
