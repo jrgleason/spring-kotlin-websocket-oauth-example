@@ -1,6 +1,8 @@
 package explore.websocket.config
 
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.Ordered
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpHeaders
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
@@ -20,6 +22,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
+@Order(Ordered.HIGHEST_PRECEDENCE + 99)
 class WebSocketConfig(
     jwtDecoder: JwtDecoder
 ) : WebSocketMessageBrokerConfigurer {
