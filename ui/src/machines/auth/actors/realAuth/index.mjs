@@ -1,5 +1,18 @@
 import { fromPromise } from 'xstate';
 
+const fetchToken = fromPromise(async ( {input} ) =>{
+    const { getAccessTokenSilently, user } = input;
+    if (!getAccessTokenSilently) {
+        throw new Error("getAccessTokenSilently not provided in machine context!");
+    }
+    const token = await getAccessTokenSilently();
+    console.log('[REAL AUTH ACTOR] Got token:', token);
+    return {
+        token,
+        user
+    };
+})
+
 /**
  * Tries to get a real token silently (i.e. if the user is already logged in).
  * If it fails, that means user is not logged in yet (token = null).
@@ -30,4 +43,4 @@ const checkRealAuth = fromPromise(async (context) => {
     // }
 });
 
-export { checkRealAuth };
+export { fetchToken };

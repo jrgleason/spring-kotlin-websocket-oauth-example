@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import {useGlobalConfig} from "./components/auth/GlobalConfigProvider.jsx";
-import {FakeAuthProvider} from "./components/auth/FakeAuthProvider.jsx";
+import {FakeAuthProvider} from "./components/auth/FakeAuth.jsx";
 import MainPage from "./pages/MainPage.jsx";
 import {RealAuthWrapper} from "./components/auth/RealAuth.jsx";
 
