@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Client } from '@stomp/stompjs'
 
-export const useStompClient = (token) => {
+export const useStompClient = token => {
     const stompClientRef = useRef(null)
     const subscriptionsRef = useRef(new Map())
     const [isClientReady, setIsClientReady] = useState(false)
@@ -28,7 +28,7 @@ export const useStompClient = (token) => {
             subscriptionsRef.current.clear()
             client.deactivate().then(() => console.log('STOMP client deactivated'))
         }
-    }, [token])
+    }, [])
 
     const subscribe = (destination, callback) => {
         if (!isClientReady) {
@@ -58,5 +58,5 @@ export const useStompClient = (token) => {
         console.log(`Sent message to ${destination}: ${message}`)
     }
 
-    return { client: stompClientRef.current, subscribe, sendMessage, isClientReady }
+    return { subscribe, sendMessage, isClientReady }
 }
