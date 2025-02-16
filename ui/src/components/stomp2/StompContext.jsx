@@ -24,27 +24,25 @@ export const useStompClient = (token) => {
         client.activate()
 
         return () => {
-            client.deactivate().then(() => console.log('STOMP client deactivated'))
             subscriptionsRef.current.forEach((sub) => sub.unsubscribe())
             subscriptionsRef.current.clear()
+            client.deactivate().then(() => console.log('STOMP client deactivated'))
         }
     }, [token])
 
     const subscribe = (destination, callback) => {
         if (!isClientReady) {
             console.info('STOMP client is not ready yet.')
-            return null
+            return
         }
 
         if (subscriptionsRef.current.has(destination)) {
             console.log(`Already subscribed to ${destination}`)
-            return null
+            return
         }
 
         const subscription = stompClientRef.current.subscribe(destination, callback)
         subscriptionsRef.current.set(destination, subscription)
-
-        return subscription
     }
 
     const sendMessage = (destination, message) => {

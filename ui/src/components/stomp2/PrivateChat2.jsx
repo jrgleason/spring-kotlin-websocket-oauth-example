@@ -11,7 +11,7 @@ const PrivateChat2 = ({username, token}) => {
         if (!isClientReady) return
         console.log("Trying to subscribe")
 
-        subscribe(`/user/queue/messages`, message => {
+        subscribe('/user/queue/messages', message => {
             console.log("Received message", message)
             setMessages((prev) => [...prev, message.body])
         })
@@ -19,9 +19,8 @@ const PrivateChat2 = ({username, token}) => {
         setIsReady(true)
     }, [isClientReady])
 
-    const sendTestMessage = () => {
+    const sendTestMessage = () =>
         sendMessage('/app/private-message', "Hello from frontend")
-    }
 
     return (
         <div>
