@@ -10,7 +10,7 @@ export function FakeAuthProvider({ fakeToken, children }) {
     const login = () => {
         // In fake mode, you might just set a token
         console.log('[FAKE] Logging in');
-        setToken(fakeToken || 'someDefaultToken');
+        setToken(fakeToken);
         setUser({ name: 'FakeUser' });
     };
 
