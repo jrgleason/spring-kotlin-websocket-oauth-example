@@ -1,5 +1,5 @@
 import {setup} from "xstate";
-import {fetchGlobalConfig} from "./auth/actors/preLogin.mjs";
+import {fetchGlobalConfig} from "./actors/auth/preLogin.mjs";
 
 export const globalConfigMachine = setup({
     actors: {
@@ -18,14 +18,14 @@ export const globalConfigMachine = setup({
                 src: 'fetchGlobalConfig',
                 onDone: {
                     target: 'done',
-                    actions: ({ context, event }) => {
+                    actions: ({context, event}) => {
                         console.log('[MACHINE] Storing global config in context');
                         context.config = event.output; // store entire config object
                     }
                 },
                 onError: {
                     target: 'error',
-                    actions: ({ context, event }) => {
+                    actions: ({context, event}) => {
                         console.error('[MACHINE] Failed to fetch global config:', event.output);
                         context.error = event.output;
                     }

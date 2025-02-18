@@ -27,10 +27,12 @@ const MarketingSplash = () => {
                         Join thousands of successful businesses that trust our platform.
                     </p>
                     <div className="flex justify-center gap-4">
-                        <button className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-colors">
+                        <button
+                            className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-colors">
                             Get Started
                         </button>
-                        <button className="border border-indigo-600 text-indigo-600 px-8 py-3 rounded-lg hover:bg-indigo-50 transition-colors">
+                        <button
+                            className="border border-indigo-600 text-indigo-600 px-8 py-3 rounded-lg hover:bg-indigo-50 transition-colors">
                             Learn More
                         </button>
                     </div>
@@ -56,7 +58,8 @@ const MarketingSplash = () => {
                             }
                         ].map((feature, index) => (
                             <div key={index} className="p-6 bg-gray-50 rounded-lg">
-                                <div className="w-12 h-12 bg-indigo-100 rounded-lg mb-4 flex items-center justify-center">
+                                <div
+                                    className="w-12 h-12 bg-indigo-100 rounded-lg mb-4 flex items-center justify-center">
                                     <div className="w-6 h-6 bg-indigo-600 rounded"></div>
                                 </div>
                                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
@@ -74,7 +77,8 @@ const MarketingSplash = () => {
                     <p className="text-gray-600 mb-8">
                         Join over 10,000+ companies already growing with our platform.
                     </p>
-                    <button className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-colors">
+                    <button
+                        className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-colors">
                         Start Free Trial
                     </button>
                 </div>

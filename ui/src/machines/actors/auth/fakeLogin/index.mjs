@@ -1,4 +1,4 @@
-import { fromPromise } from 'xstate';
+import {fromPromise} from 'xstate';
 
 // Just an example test token for fake login
 const TEST_TOKEN = 'test.token';
@@ -20,10 +20,10 @@ const doFakeUserCheck = fromPromise(async () => {
 
     // Return the user + token + fakeLogin indicator
     return {
-        user: { name: data.name },
+        user: {name: data.name},
         token: TEST_TOKEN,
         fakeLogin: true
     };
 });
 
-export { doFakeUserCheck };
+export {doFakeUserCheck};

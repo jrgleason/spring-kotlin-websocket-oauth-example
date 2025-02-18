@@ -1,4 +1,4 @@
-import { fromPromise } from 'xstate';
+import {fromPromise} from 'xstate';
 
 /**
  * Loads the global config from /fe/global
@@ -12,4 +12,4 @@ const fetchGlobalConfig = fromPromise(async () => {
     return config;
 });
 
-export { fetchGlobalConfig };
+export {fetchGlobalConfig};

@@ -1,11 +1,11 @@
 // StompProvider.jsx
-import React, {createContext, useContext, useCallback, useEffect, useRef} from "react";
-import { useMachine } from "@xstate/react";
+import React, {createContext, useCallback, useContext, useEffect, useRef} from "react";
+import {useMachine} from "@xstate/react";
 import {stompMachine} from "../../machines/StompMachine.mjs";
 
 const StompContext = createContext(null);
 
-export function StompProvider({ token, autoConnect = true, children }) {
+export function StompProvider({token, autoConnect = true, children}) {
     const [state, send] = useMachine(stompMachine);
     const previousToken = useRef(token);
 
@@ -15,16 +15,16 @@ export function StompProvider({ token, autoConnect = true, children }) {
             previousToken.current = token;
 
             if (state.matches("disconnected") && autoConnect) {
-                send({ type: "CONNECT", token });
+                send({type: "CONNECT", token});
             } else if (!state.matches("disconnected") && !state.matches("deactivating")) {
-                send({ type: "UPDATE_TOKEN", token });
+                send({type: "UPDATE_TOKEN", token});
             }
         }
     }, [token, autoConnect, send, state]);
 
-    const connect = useCallback(() => send({ type: "CONNECT", token }), [send, token]);
-    const disconnect = useCallback(() => send({ type: "DISCONNECT" }), [send]);
-    const retry = useCallback(() => send({ type: "RETRY" }), [send]);
+    const connect = useCallback(() => send({type: "CONNECT", token}), [send, token]);
+    const disconnect = useCallback(() => send({type: "DISCONNECT"}), [send]);
+    const retry = useCallback(() => send({type: "RETRY"}), [send]);
 
 
     // Get the current client - components will use this directly for subscriptions

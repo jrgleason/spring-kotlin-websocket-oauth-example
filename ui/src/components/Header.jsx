@@ -1,4 +1,4 @@
-const Header = ({ isAuthenticated, onLogin, onLogout, username }) => {
+const Header = ({isAuthenticated, onLogin, onLogout, username}) => {
     return (
         <header className="bg-gray-900 text-white py-4 px-6 shadow-md">
             <div className="container mx-auto flex justify-between items-center">

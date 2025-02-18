@@ -13,11 +13,11 @@ const __dirname = path.dirname(__filename)
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [
-      react(),
-      tailwindcss(),
-      Sitemap({
-        outDir: path.resolve(__dirname, '../app/src/main/resources/static')
-      })
+        react(),
+        tailwindcss(),
+        Sitemap({
+            outDir: path.resolve(__dirname, '../app/src/main/resources/static')
+        })
     ],
     watch: {
         include: 'src/**'

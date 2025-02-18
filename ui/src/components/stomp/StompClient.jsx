@@ -1,9 +1,9 @@
 // StompClient.jsx
-import React, { useEffect, useState } from "react";
-import { useStomp } from "../../providers/stomp/StompProvider.jsx";
+import React, {useEffect, useState} from "react";
+import {useStomp} from "../../providers/stomp/StompProvider.jsx";
 
-const StompClient = ({ title, subscribeTopic, publishTopic }) => {
-    const { state, connect, subscribe, publish, error } = useStomp();
+const StompClient = ({title, subscribeTopic, publishTopic}) => {
+    const {state, connect, subscribe, publish, error} = useStomp();
     const [messages, setMessages] = useState([]);
     const [statusMessage, setStatusMessage] = useState("");
 
@@ -42,12 +42,12 @@ const StompClient = ({ title, subscribeTopic, publishTopic }) => {
                 subscribeTopic,
                 (frame) => {
                     try {
-                    const messageText = frame.body.replace(/^Status:\s*/, "");
-                    setMessages((prev) => [...prev, messageText]);
-                } catch (error) {
-                    console.error("❌ Error processing message:", error);
-                }
-                },subscriptionHeaders);
+                        const messageText = frame.body.replace(/^Status:\s*/, "");
+                        setMessages((prev) => [...prev, messageText]);
+                    } catch (error) {
+                        console.error("❌ Error processing message:", error);
+                    }
+                }, subscriptionHeaders);
         }
 
         // Cleanup subscription when disconnecting or component unmounts
@@ -115,7 +115,7 @@ const StompClient = ({ title, subscribeTopic, publishTopic }) => {
                             state.matches("connecting") ? "bg-yellow-500" :
                                 state.matches("error") ? "bg-red-500" :
                                     "bg-gray-500"
-                    }`} />
+                    }`}/>
                     <span className="text-sm text-gray-300">{state.value}</span>
                 </div>
             </div>

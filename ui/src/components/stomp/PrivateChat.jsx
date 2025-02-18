@@ -3,7 +3,7 @@ import StompClient from './StompClient';
 import {useAuthentication} from "../../providers/auth/AuthContext.js";
 
 const PrivateChat = () => {
-    const { user, token } = useAuthentication();
+    const {user, token} = useAuthentication();
 
     if (!user) {
         return <div>Loading...</div>;

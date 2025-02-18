@@ -1,11 +1,11 @@
 // GlobalConfigProvider.js
-import React, { createContext, useContext } from 'react';
-import { useMachine } from '@xstate/react';
+import React, {createContext, useContext} from 'react';
+import {useMachine} from '@xstate/react';
 import {globalConfigMachine} from "../machines/GlobalPropertiesMachine.mjs"; // v5 or v4 is similar
 
 const GlobalConfigContext = createContext(null);
 
-export function GlobalConfigProvider({ children }) {
+export function GlobalConfigProvider({children}) {
     const [state] = useMachine(globalConfigMachine);
     if (state.matches('loadingConfig')) {
         return <div>Loading global config…</div>;
