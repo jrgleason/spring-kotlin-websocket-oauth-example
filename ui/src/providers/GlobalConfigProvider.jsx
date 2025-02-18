@@ -1,7 +1,7 @@
 // GlobalConfigProvider.js
 import React, { createContext, useContext } from 'react';
 import { useMachine } from '@xstate/react';
-import {globalConfigMachine} from "../../machines/GlobalPropertiesMachine.mjs"; // v5 or v4 is similar
+import {globalConfigMachine} from "../machines/GlobalPropertiesMachine.mjs"; // v5 or v4 is similar
 
 const GlobalConfigContext = createContext(null);
 

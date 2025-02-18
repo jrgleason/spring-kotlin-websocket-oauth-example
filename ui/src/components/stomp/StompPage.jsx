@@ -1,6 +1,6 @@
 import StompClient from './StompClient.jsx';
 import PrivateChat from "./PrivateChat.jsx";
-import {useAuthentication} from "../auth/AuthContext.js";
+import {useAuthentication} from "../../providers/auth/AuthContext.js";
 
 const StompPage = () => {
     const { token, send } = useAuthentication();

@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { useMachine } from "@xstate/react"; // from "@xstate/react"
-import { AuthContext } from "./AuthContext";
+import { AuthContext } from "./AuthContext.js";
 import {authMachine} from "../../machines/AuthMachine.mjs";
 
 export function RealAuthProvider({ children }) {

@@ -115,7 +115,6 @@ client.publish({
 - All WebSocket messages require authentication headers
 
 ### WebSocket Connection
-- Uses SockJS for better browser compatibility
 - Automatic reconnection on disconnection
 - Connection status monitoring
 - Error state management
@@ -130,7 +129,6 @@ client.publish({
 
 - React
 - @stomp/stompjs
-- sockjs-client
 - Tailwind CSS
 
 ## Building for Production

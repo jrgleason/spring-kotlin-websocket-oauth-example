@@ -16,7 +16,6 @@
     "@stomp/stompjs": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "sockjs-client": "latest",
     "xstate": "^5.19.2"
   },
   "devDependencies": {
