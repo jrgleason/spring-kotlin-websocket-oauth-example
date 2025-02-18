@@ -1,5 +1,5 @@
 import {assign, setup} from "xstate";
-import {fetchToken} from "./auth/actors/realAuth/index.mjs";
+import {fetchToken} from "./actors/auth/realAuth/index.mjs";
 
 export const authMachine = setup({
     actions: {
@@ -16,12 +16,12 @@ export const authMachine = setup({
         assignError: assign(({context, event}) => {
             context.error = event.error;
         })
-    }, actors:{
+    }, actors: {
         fetchToken
     }
 }).createMachine({
     id: 'authMachine',
-    context: ({input})=>({
+    context: ({input}) => ({
         // Insert a reference to getAccessTokenSilently from useAuth0 here,
         // plus any other values you want (like useRefresh).
         getAccessTokenSilently: input.getAccessTokenSilently,
@@ -33,13 +33,13 @@ export const authMachine = setup({
     states: {
         idle: {
             on: {
-                START_GET_TOKEN: { target: 'gettingToken' }
+                START_GET_TOKEN: {target: 'gettingToken'}
             }
         },
         gettingToken: {
-            entry: ({context})=>{
-              console.log("Trying to get the token");
-              console.log("Context is: ", JSON.stringify(context));
+            entry: ({context}) => {
+                console.log("Trying to get the token");
+                console.log("Context is: ", JSON.stringify(context));
             },
             invoke: {
                 src: "fetchToken",
@@ -53,7 +53,7 @@ export const authMachine = setup({
                     }),
                 onDone: {
                     target: 'loggedIn',
-                    actions: ({ context, event }) => {
+                    actions: ({context, event}) => {
                         context.token = event.output.token;
                         context.user = event.output.user;
                         console.log("Context after is: ", JSON.stringify(context));
@@ -78,7 +78,7 @@ export const authMachine = setup({
          */
         error: {
             on: {
-                RETRY: { target: 'gettingToken' },
+                RETRY: {target: 'gettingToken'},
                 CLEAR_ERROR: {
                     actions: 'assignError'
                 }

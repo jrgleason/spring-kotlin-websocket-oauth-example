@@ -1,7 +1,7 @@
-import { fromPromise } from 'xstate';
+import {fromPromise} from 'xstate';
 
-const fetchToken = fromPromise(async ( {input} ) =>{
-    const { getAccessTokenSilently, user } = input;
+const fetchToken = fromPromise(async ({input}) => {
+    const {getAccessTokenSilently, user} = input;
     if (!getAccessTokenSilently) {
         throw new Error("getAccessTokenSilently not provided in machine context!");
     }
@@ -43,4 +43,4 @@ const checkRealAuth = fromPromise(async (context) => {
     // }
 });
 
-export { fetchToken };
+export {fetchToken};

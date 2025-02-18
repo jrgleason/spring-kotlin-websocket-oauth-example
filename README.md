@@ -47,7 +47,6 @@ The WebSocket setup includes:
 
 - STOMP message broker configuration
 - User destination prefixes for private messaging
-- SockJS fallback support
 - Security interceptors for message authentication
 
 ## Setup and Configuration
@@ -90,15 +89,6 @@ For production deployment:
 
 ## Usage Examples
 
-### Connecting to WebSocket
-
-```javascript
-const socket = new SockJS('/ws');
-const stompClient = new Client({
-    webSocketFactory: () => socket,
-    connectHeaders: {Authorization: `Bearer your-token`}
-});
-```
 
 ### Subscribing to Private Messages
 
@@ -138,7 +128,6 @@ stompClient.publish({
 
 - The fake JWT configuration should only be used for development and testing
 - The `SecurityConfig` provides a basic security setup that should be enhanced based on your specific requirements
-- WebSocket connections are configured to use SockJS for better browser compatibility
 
 ## Dependencies
 
@@ -146,5 +135,4 @@ stompClient.publish({
 - Spring Security
 - Spring WebSocket
 - Kotlin
-- SockJS
 - STOMP

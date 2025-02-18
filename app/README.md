@@ -26,7 +26,7 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS()
+        registry.addEndpoint("/ws").setAllowedOriginPatterns("*")
     }
 }
 ```
@@ -83,7 +83,7 @@ class SecurityConfig {
 ## Available Endpoints
 
 ### WebSocket
-- `/ws` - Main WebSocket endpoint (SockJS enabled)
+- `/ws` - Main WebSocket endpoint
 
 ### Message Destinations
 - `/app/private-message` - Send private messages

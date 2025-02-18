@@ -6,13 +6,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.messaging.Message
-import org.springframework.messaging.MessageChannel
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.messaging.simp.SimpMessageType
-import org.springframework.messaging.simp.config.ChannelRegistration
-import org.springframework.messaging.support.ChannelInterceptor
-import org.springframework.messaging.support.MessageHeaderAccessor
 import org.springframework.security.authentication.AnonymousAuthenticationToken
+import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authorization.AuthorizationDecision
 import org.springframework.security.authorization.AuthorizationManager
 import org.springframework.security.config.annotation.web.socket.EnableWebSocketSecurity
@@ -20,16 +16,15 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.messaging.access.intercept.MessageAuthorizationContext
 import org.springframework.security.messaging.access.intercept.MessageMatcherDelegatingAuthorizationManager
-import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider
 
 @Profile("secure")
 @Configuration
 @EnableWebSocketSecurity
-class WebSocketSecurityConfig(jwtDecoder: JwtDecoder) {
+class WebSocketSecurityConfig(
+    private val authenticationProvider: AuthenticationProvider
+) {
     private val logger: Logger = LoggerFactory.getLogger(WebSocketSecurityConfig::class.java)
-    private val authenticationProvider = JwtAuthenticationProvider(jwtDecoder)
 
     @Bean
     fun messageAuthorizationManager(

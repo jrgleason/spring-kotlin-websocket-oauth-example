@@ -1,8 +1,6 @@
 package explore.websocket.controller
 
 import explore.websocket.config.providers.AuthPropertiesProvider
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping

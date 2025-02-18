@@ -21,10 +21,13 @@ class FakeJwtConfig {
 
     @Value("\${token:test.token}")
     private var fakeToken: String = ""
+
     @Value("\${sub:fakeUser}")
     private var sub: String = ""
+
     @Value("\${alg:fakeAlg}")
     private var alg: String? = ""
+
     @Value("\${expiry-seconds:3600}")
     private var expirySeconds: Long = 0
 

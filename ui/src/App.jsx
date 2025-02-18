@@ -1,9 +1,9 @@
 import './App.css';
 import React from 'react';
-import {useGlobalConfig} from "./components/auth/GlobalConfigProvider.jsx";
-import {FakeAuthProvider} from "./components/auth/FakeAuth.jsx";
+import {useGlobalConfig} from "./providers/GlobalConfigProvider.jsx";
+import {FakeAuthProvider} from "./providers/auth/FakeAuth.jsx";
 import MainPage from "./pages/MainPage.jsx";
-import {RealAuthWrapper} from "./components/auth/RealAuth.jsx";
+import {RealAuthWrapper} from "./providers/auth/RealAuth.jsx";
 
 export function App() {
     const config = useGlobalConfig(); // e.g. { fakeLogin: "true", fakeToken: "...", domain: "...", ... }
